@@ -27,7 +27,7 @@ router.put('/', async (req, res) => {
     try{
         const recipe = await RecipeModel.findById(req.body.recipeID);
         const user = await UserModel.findById(req.body.userID)
-        user.SavedRecipes.push(recipe);
+        user.savedRecipes.push(recipe);
         await user.save()
         res.json({ savedRecipes: user.savedRecipes})
     }catch(err) {
@@ -35,10 +35,10 @@ router.put('/', async (req, res) => {
     }
 })
 
-router.get("/savedRecipes/ids", async (req, res) => {
+router.get("/savedRecipes/ids/:userID", async (req, res) => {
     try{
-        const user = await UserModel.findById(req.body.userID);
-        res.json({ savedRecipes: user?.SavedRecipes})
+        const user = await UserModel.findById(req.params.userID);
+        res.json({ savedRecipes: user?.savedRecipes})
     }catch(err) {
         res.json(err)
     }
