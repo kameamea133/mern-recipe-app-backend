@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const RecipeModel = require('../models/Recipes');
 const UserModel = require('../models/Users');
+const verifyToken = require('./users')
 
 router.get('/', async (req, res) => {
     try{
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
     const recipe = new RecipeModel(req.body)
     try{
         const response = await recipe.save();
@@ -23,7 +24,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.put('/', async (req, res) => {
+router.put('/', verifyToken, async (req, res) => {
     try{
         const recipe = await RecipeModel.findById(req.body.recipeID);
         const user = await UserModel.findById(req.body.userID)
@@ -44,9 +45,9 @@ router.get("/savedRecipes/ids/:userID", async (req, res) => {
     }
 })
 
-router.get("/savedRecipes", async (req, res) => {
+router.get("/savedRecipes/:userID", async (req, res) => {
     try{
-        const user = await UserModel.findById(req.body.userID);
+        const user = await UserModel.findById(req.params.userID);
         const savedRecipes = await RecipeModel.find({
             _id: { $in: user.savedRecipes}
         })
