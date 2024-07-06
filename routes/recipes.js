@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 const RecipeModel = require('../models/Recipes');
 const UserModel = require('../models/Users');
-const verifyToken = require('./users')
+const verifyToken = require('../middleware/verifyToken')
 
 router.get('/', async (req, res) => {
     try{
-        const response = await RecipeModel.find({});
+        const response = await RecipeModel.find({}).populate();
         res.json(response)
     }catch(err) {
         res.json(err)
@@ -57,6 +57,24 @@ router.get("/savedRecipes/:userID", async (req, res) => {
     }
 })
 
+router.delete('/:recipeID', verifyToken, async (req, res) => {
+    const { recipeID } = req.params;
+    const { userID } = req.body;
 
+    try {
+        
+        const user = await UserModel.findById(userID);
+
+       
+        user.savedRecipes = user.savedRecipes.filter(id => id.toString() !== recipeID);
+
+        
+        await user.save();
+
+        res.json({ message: "Recipe deleted successfully!", savedRecipes: user.savedRecipes });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 module.exports = router;

@@ -5,6 +5,11 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
     required: true,
    },
+   category: { 
+    type: String, 
+    required: true,
+    enum: ['starter', 'dish', 'dessert'], // Ajoute les options de catégories
+   },
    ingredients: [{ type: String, required: true}],
    instructions: { type: String, required: true},
    imageUrl: { type: String, required: true},
