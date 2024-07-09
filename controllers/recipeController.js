@@ -84,6 +84,22 @@ const getRecipesByCategory = async (req, res) => {
     }
 };
 
+const searchRecipes = async (req, res) => {
+    const { query } = req.params;
+    try {
+        const recipes = await RecipeModel.aggregate([
+            {
+                $match: {
+                    name: { $regex: query, $options: 'i' }
+                }
+            }
+        ]);
+        res.json(recipes);
+    } catch (err) {
+        res.json(err);
+    }
+};
+
 module.exports = {
     getAllRecipes,
     createRecipe,
@@ -92,4 +108,5 @@ module.exports = {
     getSavedRecipes,
     deleteRecipe,
     getRecipesByCategory,
+    searchRecipes,
 };

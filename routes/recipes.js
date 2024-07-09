@@ -10,6 +10,7 @@ const {
     getSavedRecipes,
     deleteRecipe,
     getRecipesByCategory,
+    searchRecipes,
 
 } = require('../controllers/recipeController');
 
@@ -24,5 +25,9 @@ router.delete('/:recipeID', verifyToken, deleteRecipe);
 router.get('/category/starter', (req, res) => getRecipesByCategory({ params: { category: 'starter' } }, res));
 router.get('/category/dish', (req, res) => getRecipesByCategory({ params: { category: 'dish' } }, res));
 router.get('/category/dessert', (req, res) => getRecipesByCategory({ params: { category: 'dessert' } }, res));
+
+// Route pour la recherche
+router.get('/search/:query', searchRecipes);
+
 
 module.exports = router;
