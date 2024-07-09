@@ -100,6 +100,36 @@ const searchRecipes = async (req, res) => {
     }
 };
 
+const getUserRecipes = async (req, res) => {
+    try {
+        const recipes = await RecipeModel.find({ userOwner: req.params.userID });
+        res.json(recipes);
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+
+const getRecipeById = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findById(req.params.id);
+        res.json(recipe);
+    } catch (err) {
+        res.json(err);
+    }
+};
+
+const updateRecipeById = async (req, res) => {
+    try {
+        const updatedRecipe = await RecipeModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updatedRecipe);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+
+
+
 module.exports = {
     getAllRecipes,
     createRecipe,
@@ -109,4 +139,7 @@ module.exports = {
     deleteRecipe,
     getRecipesByCategory,
     searchRecipes,
+    getUserRecipes,
+    getRecipeById,
+    updateRecipeById,
 };

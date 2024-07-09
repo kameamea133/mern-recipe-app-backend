@@ -8,7 +8,7 @@ const RecipeSchema = new mongoose.Schema({
    category: { 
     type: String, 
     required: true,
-    enum: ['starter', 'dish', 'dessert'], // Ajoute les options de catégories
+    enum: ['starter', 'dish', 'dessert'], 
    },
    ingredients: [{ type: String, required: true}],
    instructions: { type: String, required: true},
