@@ -25,16 +25,24 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const MAX_USERS = 50;
+
 
 const registerUser = async (req, res) => {
   const { username, password } = req.body;
-  const user = await UserModel.findOne({ username });
 
+ 
+  const userCount = await UserModel.countDocuments();
+  if (userCount >= MAX_USERS) {
+    return res.json({ result: false, message: "User limit reached. No more users can be registered." });
+  }
+
+  const user = await UserModel.findOne({ username });
   if (user) {
     return res.json({ result: false, message: "User already exists!" });
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
 
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new UserModel({ username, password: hashedPassword });
   newUser.save();
   res.json({ result: true, message: "User Registered successfully!" });
